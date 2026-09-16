@@ -4,9 +4,11 @@ import { State, Toast } from '../state.js';
 export function createHeroBanner(movie) {
     const banner = document.createElement('section');
     banner.className = 'hero-banner';
+    banner.setAttribute('aria-label', 'Destaque: ' + (movie?.title || 'FLIXIO'));
 
     const bg = document.createElement('div');
     bg.className = 'hero-background';
+    bg.setAttribute('aria-hidden', 'true');
     if (movie && movie.img) {
         bg.style.backgroundImage = `url('${movie.img}')`;
         // Validate image URL using Image() object since div error events don't fire
@@ -39,8 +41,10 @@ export function createHeroBanner(movie) {
 
     const watchBtn = document.createElement('button');
     watchBtn.className = 'btn btn-primary';
+    watchBtn.setAttribute('aria-label', 'Assistir ' + (movie?.title || ''));
     const playIcon = document.createElement('span');
     playIcon.textContent = '▶ ';
+    playIcon.setAttribute('aria-hidden', 'true');
     watchBtn.appendChild(playIcon);
     watchBtn.appendChild(document.createTextNode('Assistir'));
     watchBtn.addEventListener('click', () => {
@@ -52,10 +56,14 @@ export function createHeroBanner(movie) {
 
     const myListBtn = document.createElement('button');
     myListBtn.className = 'btn btn-secondary';
+    const profile = State.getCurrentProfile();
+    const isFav = profile && movie ? State.isFavorite(profile.id, movie.title) : false;
+    myListBtn.setAttribute('aria-label', isFav ? 'Remover ' + (movie?.title || '') + ' da lista' : 'Adicionar ' + (movie?.title || '') + ' à lista');
     const myListIcon = document.createElement('span');
-    myListIcon.textContent = '＋ ';
+    myListIcon.textContent = isFav ? '✓ ' : '＋ ';
+    myListIcon.setAttribute('aria-hidden', 'true');
     myListBtn.appendChild(myListIcon);
-    myListBtn.appendChild(document.createTextNode('Minha Lista'));
+    myListBtn.appendChild(document.createTextNode(isFav ? 'Na Lista' : 'Minha Lista'));
     myListBtn.addEventListener('click', () => {
         const profile = State.getCurrentProfile();
         if (!profile || !movie) return;
@@ -70,8 +78,10 @@ export function createHeroBanner(movie) {
 
     const infoBtn = document.createElement('button');
     infoBtn.className = 'btn btn-secondary';
+    infoBtn.setAttribute('aria-label', 'Mais informações sobre ' + (movie?.title || ''));
     const infoIcon = document.createElement('span');
     infoIcon.textContent = 'ℹ ';
+    infoIcon.setAttribute('aria-hidden', 'true');
     infoBtn.appendChild(infoIcon);
     infoBtn.appendChild(document.createTextNode('Mais Informações'));
     infoBtn.addEventListener('click', () => {

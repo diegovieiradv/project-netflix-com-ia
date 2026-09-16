@@ -1,8 +1,9 @@
 import { State, Toast } from '../state.js';
 import { categories, allMovies } from '../data.js';
-import { navigateTo } from '../router.js';
+import { navigateTo, clearKeyHandlers } from '../router.js';
 import { createHeroBanner } from './HeroBanner.js';
 import { createCarousel } from './Carousel.js';
+import { debounce } from '../utils.js';
 
 export function renderCatalogScreen(container) {
     const profile = State.getCurrentProfile();
@@ -17,6 +18,7 @@ export function renderCatalogScreen(container) {
     // ===== NAVBAR =====
     const navbar = document.createElement('nav');
     navbar.className = 'navbar';
+    navbar.setAttribute('aria-label', 'Navegação principal');
 
     // Logo
     const navbarHeader = document.createElement('header');
@@ -32,6 +34,7 @@ export function renderCatalogScreen(container) {
     // Nav links
     const navMenu = document.createElement('ul');
     navMenu.className = 'navbar-menu';
+    navMenu.setAttribute('role', 'menubar');
 
     const linkFilters = [
         { text: 'Início', filter: 'all' },
@@ -45,16 +48,23 @@ export function renderCatalogScreen(container) {
 
     linkFilters.forEach((linkData, idx) => {
         const li = document.createElement('li');
+        li.setAttribute('role', 'none');
         const a = document.createElement('a');
         a.href = '#';
         a.className = 'nav-link' + (idx === 0 ? ' active' : '');
         a.textContent = linkData.text;
+        a.setAttribute('role', 'menuitem');
+        if (idx === 0) a.setAttribute('aria-current', 'page');
         a.addEventListener('click', (e) => {
             e.preventDefault();
             currentFilter = linkData.filter;
             // Update active state
-            navMenu.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            navMenu.querySelectorAll('.nav-link').forEach(l => {
+                l.classList.remove('active');
+                l.removeAttribute('aria-current');
+            });
             a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
             // Re-render content
             renderContent();
         });
@@ -64,17 +74,42 @@ export function renderCatalogScreen(container) {
 
     navbar.appendChild(navMenu);
 
-    // Search input
+    // Search area
     const searchContainer = document.createElement('div');
     searchContainer.style.flex = '1';
-    searchContainer.style.maxWidth = '300px';
+    searchContainer.style.maxWidth = '400px';
+    searchContainer.style.display = 'flex';
+    searchContainer.style.gap = '0.5rem';
+    searchContainer.style.alignItems = 'center';
 
     const searchInput = document.createElement('input');
     searchInput.type = 'search';
     searchInput.className = 'nav-search';
-    searchInput.placeholder = 'Buscar...';
+    searchInput.placeholder = 'Buscar por título, gênero ou ano...';
     searchInput.setAttribute('aria-label', 'Buscar filmes e séries');
     searchContainer.appendChild(searchInput);
+
+    // Year filter
+    const yearFilter = document.createElement('select');
+    yearFilter.className = 'nav-search';
+    yearFilter.style.maxWidth = '120px';
+    yearFilter.style.cursor = 'pointer';
+    yearFilter.setAttribute('aria-label', 'Filtrar por década');
+    const yearOptions = [
+        { value: '', text: 'Todas' },
+        { value: '2020', text: '2020s' },
+        { value: '2010', text: '2010s' },
+        { value: '2000', text: '2000s' },
+        { value: '1990', text: '1990s' }
+    ];
+    yearOptions.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.text;
+        yearFilter.appendChild(option);
+    });
+    searchContainer.appendChild(yearFilter);
+
     navbar.appendChild(searchContainer);
 
     // Right side
@@ -84,6 +119,7 @@ export function renderCatalogScreen(container) {
     const profileBtn = document.createElement('button');
     profileBtn.className = 'profile-btn';
     profileBtn.textContent = 'Trocar Perfil';
+    profileBtn.setAttribute('aria-label', 'Trocar perfil de usuário');
     profileBtn.addEventListener('click', () => {
         navigateTo('#profiles');
     });
@@ -92,6 +128,7 @@ export function renderCatalogScreen(container) {
     const logoutBtn = document.createElement('button');
     logoutBtn.className = 'logout-btn';
     logoutBtn.textContent = 'Sair';
+    logoutBtn.setAttribute('aria-label', 'Sair da conta');
     logoutBtn.addEventListener('click', () => {
         if (confirm('Tem certeza que deseja sair?')) {
             State.setCurrentProfile(null);
@@ -140,12 +177,14 @@ export function renderCatalogScreen(container) {
 
     // ===== CONTENT RENDERING FUNCTION =====
     function renderContent() {
-        // Clear content area
+        // Clear content area and key handlers to prevent accumulation
         while (contentArea.firstChild) {
             contentArea.removeChild(contentArea.firstChild);
         }
+        clearKeyHandlers();
 
         const searchQuery = searchInput.value.trim().toLowerCase();
+        const yearValue = yearFilter.value;
 
         // Filter logic
         let filteredCategories = categories;
@@ -166,10 +205,12 @@ export function renderCatalogScreen(container) {
                 contentArea.appendChild(emptySection);
                 return;
             }
-            // Create favorites category
+            // Create favorites category (deduplicated by title)
+            const seen = new Set();
             const favItems = [];
             allMovies.forEach(movie => {
-                if (favTitles.includes(movie.title)) {
+                if (favTitles.includes(movie.title) && !seen.has(movie.title)) {
+                    seen.add(movie.title);
                     favItems.push(movie);
                 }
             });
@@ -179,31 +220,46 @@ export function renderCatalogScreen(container) {
             return;
         }
 
+        // Filter items within categories for movies/series
         if (currentFilter === 'series') {
-            filteredCategories = categories.filter(cat =>
-                cat.title === 'Séries' || cat.title === 'Para maratonar' ||
-                cat.items.some(item => item.category === 'Séries')
-            );
+            filteredCategories = categories.map(cat => ({
+                ...cat,
+                items: cat.items.filter(item => item.category === 'Séries' || item.category === 'Para maratonar')
+            })).filter(cat => cat.items.length > 0);
         } else if (currentFilter === 'movies') {
-            filteredCategories = categories.filter(cat =>
-                cat.title !== 'Séries' && cat.title !== 'Para maratonar' &&
-                cat.items.some(item => item.category !== 'Séries')
-            );
+            filteredCategories = categories.map(cat => ({
+                ...cat,
+                items: cat.items.filter(item => item.category !== 'Séries' && item.category !== 'Para maratonar')
+            })).filter(cat => cat.items.length > 0);
         } else if (currentFilter === 'new') {
             filteredCategories = categories.filter(cat =>
                 cat.items.some(item => item.badge)
             );
         }
 
-        // Search filter
-        if (searchQuery) {
+        // Search filter with year support
+        if (searchQuery || yearValue) {
             filteredCategories = filteredCategories.map(cat => ({
                 ...cat,
-                items: cat.items.filter(item =>
-                    (item.title && item.title.toLowerCase().includes(searchQuery)) ||
-                    (item.category && item.category.toLowerCase().includes(searchQuery)) ||
-                    (item.genres && item.genres.some(g => g.toLowerCase().includes(searchQuery)))
-                )
+                items: cat.items.filter(item => {
+                    // Text search
+                    let matchesText = true;
+                    if (searchQuery) {
+                        matchesText = (item.title && item.title.toLowerCase().includes(searchQuery)) ||
+                            (item.category && item.category.toLowerCase().includes(searchQuery)) ||
+                            (item.genres && item.genres.some(g => g.toLowerCase().includes(searchQuery))) ||
+                            (item.year && String(item.year).includes(searchQuery));
+                    }
+                    // Year/decade filter
+                    let matchesYear = true;
+                    if (yearValue && item.year) {
+                        const decade = parseInt(yearValue, 10);
+                        matchesYear = item.year >= decade && item.year < decade + 10;
+                    } else if (yearValue && !item.year) {
+                        matchesYear = false;
+                    }
+                    return matchesText && matchesYear;
+                })
             })).filter(cat => cat.items.length > 0);
         }
 
@@ -251,13 +307,15 @@ export function renderCatalogScreen(container) {
             // Content sections
             const sections = document.createElement('main');
             sections.className = 'sliders-container';
+            sections.setAttribute('aria-label', 'Conteúdo');
 
-            if (filteredCategories.length === 0 && searchQuery) {
+            if (filteredCategories.length === 0 && (searchQuery || yearValue)) {
                 const noResults = document.createElement('div');
                 noResults.style.textAlign = 'center';
                 noResults.style.padding = '3rem';
-                noResults.style.color = '#737373';
-                noResults.textContent = 'Nenhum resultado encontrado para "' + searchQuery + '"';
+                noResults.style.color = 'var(--text-muted)';
+                noResults.setAttribute('role', 'status');
+                noResults.textContent = 'Nenhum resultado encontrado para "' + (searchQuery || yearFilter.options[yearFilter.selectedIndex].text) + '"';
                 sections.appendChild(noResults);
             }
 
@@ -270,14 +328,13 @@ export function renderCatalogScreen(container) {
         }, 500);
     }
 
-    // Search input handler with debounce
-    let searchTimeout;
-    searchInput.addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            renderContent();
-        }, 300);
-    });
+    // Debounced search with improved delay
+    const debouncedRender = debounce(() => {
+        renderContent();
+    }, 300);
+
+    searchInput.addEventListener('input', debouncedRender);
+    yearFilter.addEventListener('change', renderContent);
 
     // Initial render
     renderContent();

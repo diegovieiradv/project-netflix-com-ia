@@ -4,20 +4,43 @@ import { State, Toast } from '../state.js';
 export function createContentCard(item) {
     const card = document.createElement('div');
     card.className = 'movie-card';
-    card.setAttribute('role', 'button');
+    card.setAttribute('role', 'group');
+    card.setAttribute('aria-label', 'Card de filme: ' + (item.title || 'Sem título'));
     card.setAttribute('tabindex', '0');
     if (item.progress) {
         card.classList.add('has-progress');
     }
 
-    // Image
+    // Image with robust fallback
     const img = document.createElement('img');
-    img.src = item.img || generatePoster(item.title, item.color);
+    const originalSrc = item.img || generatePoster(item.title, item.color);
+    img.src = originalSrc;
     img.alt = item.title || 'Filme';
     img.loading = 'lazy';
     img.decoding = 'async';
     img.addEventListener('error', () => {
-        img.src = generatePoster(item.title, item.color);
+        // Avoid infinite loop if fallback also fails
+        if (img.src !== originalSrc) {
+            img.src = generatePoster(item.title, item.color);
+        } else {
+            // Last resort: show a colored placeholder
+            img.style.display = 'none';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'avatar-generated';
+            placeholder.style.backgroundColor = item.color || '#333';
+            placeholder.style.position = 'absolute';
+            placeholder.style.top = '0';
+            placeholder.style.left = '0';
+            placeholder.style.width = '100%';
+            placeholder.style.height = '100%';
+            placeholder.style.display = 'flex';
+            placeholder.style.alignItems = 'center';
+            placeholder.style.justifyContent = 'center';
+            placeholder.style.fontSize = '2rem';
+            placeholder.style.color = 'var(--text-primary)';
+            placeholder.textContent = item.title ? item.title.charAt(0) : '🎬';
+            card.appendChild(placeholder);
+        }
     });
 
     // Iframe for YouTube preview
@@ -25,6 +48,7 @@ export function createContentCard(item) {
     iframe.frameBorder = '0';
     iframe.allow = 'autoplay; encrypted-media';
     iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    iframe.setAttribute('title', 'Preview de vídeo: ' + (item.title || ''));
 
     const videoId = getYouTubeId(item.youtube);
 
@@ -42,7 +66,7 @@ export function createContentCard(item) {
 
     const playBtn = document.createElement('button');
     playBtn.className = 'btn-icon btn-play-icon';
-    playBtn.setAttribute('aria-label', 'Reproduzir');
+    playBtn.setAttribute('aria-label', 'Reproduzir ' + (item.title || ''));
     const playI = document.createElement('i');
     playI.className = 'fas fa-play';
     playI.style.marginLeft = '2px';
@@ -55,7 +79,6 @@ export function createContentCard(item) {
 
     const addBtn = document.createElement('button');
     addBtn.className = 'btn-icon';
-    addBtn.setAttribute('aria-label', 'Adicionar à lista');
     const addI = document.createElement('i');
     addI.className = 'fas fa-plus';
     addBtn.appendChild(addI);
@@ -63,7 +86,9 @@ export function createContentCard(item) {
     const currentProfile = State.getCurrentProfile();
     if (currentProfile && State.isFavorite(currentProfile.id, item.title)) {
         addI.className = 'fas fa-check';
-        addBtn.setAttribute('aria-label', 'Adicionado');
+        addBtn.setAttribute('aria-label', 'Remover ' + (item.title || '') + ' da lista');
+    } else {
+        addBtn.setAttribute('aria-label', 'Adicionar ' + (item.title || '') + ' à lista');
     }
     addBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -72,11 +97,11 @@ export function createContentCard(item) {
         const result = State.toggleFavorite(profile.id, item.title);
         if (result && result.includes(item.title)) {
             addI.className = 'fas fa-check';
-            addBtn.setAttribute('aria-label', 'Adicionado');
+            addBtn.setAttribute('aria-label', 'Remover ' + (item.title || '') + ' da lista');
             Toast.success('Adicionado à Minha Lista');
         } else {
             addI.className = 'fas fa-plus';
-            addBtn.setAttribute('aria-label', 'Adicionar à lista');
+            addBtn.setAttribute('aria-label', 'Adicionar ' + (item.title || '') + ' à lista');
             Toast.info('Removido da Minha Lista');
         }
     });
@@ -84,7 +109,7 @@ export function createContentCard(item) {
 
     const likeBtn = document.createElement('button');
     likeBtn.className = 'btn-icon';
-    likeBtn.setAttribute('aria-label', 'Curtir');
+    likeBtn.setAttribute('aria-label', 'Curtir ' + (item.title || ''));
     const likeI = document.createElement('i');
     likeI.className = 'fas fa-thumbs-up';
     likeBtn.appendChild(likeI);
@@ -95,7 +120,7 @@ export function createContentCard(item) {
 
     const expandBtn = document.createElement('button');
     expandBtn.className = 'btn-icon';
-    expandBtn.setAttribute('aria-label', 'Expandir');
+    expandBtn.setAttribute('aria-label', 'Mais informações sobre ' + (item.title || ''));
     const expandI = document.createElement('i');
     expandI.className = 'fas fa-chevron-down';
     expandBtn.appendChild(expandI);
@@ -155,6 +180,7 @@ export function createContentCard(item) {
     if (item.top10) {
         const badge = document.createElement('div');
         badge.className = 'badge-top10';
+        badge.setAttribute('aria-label', 'Top 10');
         const topSpan = document.createElement('span');
         topSpan.className = 'top';
         topSpan.textContent = 'TOP';
@@ -178,6 +204,11 @@ export function createContentCard(item) {
     if (item.progress) {
         const pbContainer = document.createElement('div');
         pbContainer.className = 'progress-bar-container';
+        pbContainer.setAttribute('role', 'progressbar');
+        pbContainer.setAttribute('aria-valuenow', item.progress);
+        pbContainer.setAttribute('aria-valuemin', '0');
+        pbContainer.setAttribute('aria-valuemax', '100');
+        pbContainer.setAttribute('aria-label', item.progress + '% assistido');
         const pbValue = document.createElement('div');
         pbValue.className = 'progress-value';
         pbValue.style.width = item.progress + '%';
@@ -220,6 +251,8 @@ export function createContentCard(item) {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             document.dispatchEvent(new CustomEvent('open:video', { detail: item }));
+        } else if (e.key === 'Escape') {
+            card.blur();
         }
     });
 

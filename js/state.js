@@ -13,29 +13,34 @@ function getDefaultState() {
 function loadState() {
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-            const parsed = JSON.parse(raw);
-            if (parsed && Array.isArray(parsed.profiles)) {
-                // Filter out dangerous keys and validate profiles
-                parsed.profiles = parsed.profiles.filter(p => {
-                    if (Object.prototype.hasOwnProperty.call(p, '__proto__') ||
-                        Object.prototype.hasOwnProperty.call(p, 'constructor') ||
-                        Object.prototype.hasOwnProperty.call(p, 'prototype')) return false;
-                    if (typeof p.name !== 'string' || typeof p.id !== 'string') return false;
-                    return true;
-                });
-                // Migration: add favorites/watched to existing profiles
-                parsed.profiles.forEach(function(p) {
-                    if (!Array.isArray(p.favorites)) p.favorites = [];
-                    if (!Array.isArray(p.watched)) p.watched = [];
-                });
-                return parsed;
-            }
+        if (!raw) return getDefaultState();
+
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.profiles)) {
+            console.warn('Invalid state format, using defaults');
+            return getDefaultState();
         }
+
+        // Filter out dangerous keys and validate profiles
+        parsed.profiles = parsed.profiles.filter(function (p) {
+            if (Object.prototype.hasOwnProperty.call(p, '__proto__') ||
+                Object.prototype.hasOwnProperty.call(p, 'constructor') ||
+                Object.prototype.hasOwnProperty.call(p, 'prototype')) return false;
+            if (typeof p.name !== 'string' || typeof p.id !== 'string') return false;
+            return true;
+        });
+
+        // Migration: add favorites/watched to existing profiles
+        parsed.profiles.forEach(function (p) {
+            if (!Array.isArray(p.favorites)) p.favorites = [];
+            if (!Array.isArray(p.watched)) p.watched = [];
+        });
+
+        return parsed;
     } catch (e) {
         console.warn('Failed to load state from localStorage:', e);
+        return getDefaultState();
     }
-    return getDefaultState();
 }
 
 function saveState(state) {
@@ -43,6 +48,7 @@ function saveState(state) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (e) {
         console.warn('Failed to save state to localStorage:', e);
+        Toast.warning('Dados não puderam ser salvos. Verifique o espaço disponível.');
     }
 }
 
@@ -124,7 +130,13 @@ export const State = {
     updateProfile: function(id, updates) {
         var idx = state.profiles.findIndex(function(p) { return p.id === id; });
         if (idx === -1) return null;
-        Object.assign(state.profiles[idx], updates);
+        // Filtrar apenas campos permitidos para evitar prototype pollution
+        const allowed = ['name', 'color', 'avatar', 'avatarType', 'avatarIcon', 'avatarLabel'];
+        allowed.forEach(function(key) {
+            if (updates.hasOwnProperty(key) && typeof updates[key] === 'string') {
+                state.profiles[idx][key] = updates[key];
+            }
+        });
         saveState(state);
         return state.profiles[idx];
     },

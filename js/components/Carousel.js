@@ -4,6 +4,7 @@ import { registerKeyHandler, scrollRow } from '../router.js';
 export function createCarousel(category) {
     const section = document.createElement('div');
     section.className = 'slider-section';
+    section.setAttribute('aria-label', 'Carrossel: ' + category.title);
 
     // Header
     const header = document.createElement('div');
@@ -18,15 +19,16 @@ export function createCarousel(category) {
 
     const prevBtn = document.createElement('button');
     prevBtn.className = 'carousel-nav-btn';
-    prevBtn.setAttribute('aria-label', 'Anterior');
+    prevBtn.setAttribute('aria-label', 'Rolar para esquerda em ' + category.title);
     prevBtn.textContent = '◀';
 
     const indicators = document.createElement('div');
     indicators.className = 'slider-indicators';
+    indicators.setAttribute('aria-hidden', 'true');
 
     const nextBtn = document.createElement('button');
     nextBtn.className = 'carousel-nav-btn';
-    nextBtn.setAttribute('aria-label', 'Próximo');
+    nextBtn.setAttribute('aria-label', 'Rolar para direita em ' + category.title);
     nextBtn.textContent = '▶';
 
     navDiv.appendChild(prevBtn);
@@ -40,9 +42,12 @@ export function createCarousel(category) {
     // Movie row
     const row = document.createElement('div');
     row.className = 'movie-row';
+    row.setAttribute('role', 'list');
+    row.setAttribute('aria-label', category.title);
 
     category.items.forEach(item => {
         const card = createContentCard(item);
+        card.setAttribute('role', 'listitem');
         row.appendChild(card);
     });
 

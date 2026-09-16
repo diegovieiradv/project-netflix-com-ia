@@ -15,6 +15,9 @@ export function createProfileModal(profileId, onSave, onDelete) {
 
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', isEdit ? 'Editar perfil' : 'Adicionar perfil');
 
     const modal = document.createElement('div');
     modal.className = 'profile-modal';
@@ -132,6 +135,7 @@ export function createProfileModal(profileId, onSave, onDelete) {
         deleteBtn.type = 'button';
         deleteBtn.className = 'btn btn-delete';
         deleteBtn.textContent = 'Excluir';
+        deleteBtn.setAttribute('aria-label', 'Excluir perfil');
         deleteBtn.addEventListener('click', () => {
             if (confirm('Tem certeza que deseja excluir este perfil?')) {
                 onDelete(profileId);
@@ -165,14 +169,18 @@ export function createProfileModal(profileId, onSave, onDelete) {
         const selectedAvatar = avatarOptions[selectedAvatarIndex];
         const selectedColor = colorOptions[selectedColorIndex];
 
-        onSave({
+        // Preserve image avatar if editing and avatarType is 'image'
+        const isNewImageAvatar = isEdit && profile && profile.avatarType === 'image' && selectedAvatarIndex === 0;
+        const saveData = {
             name: sanitizeString(name),
             color: selectedColor,
-            avatar: selectedAvatar.icon,
-            avatarType: 'generated',
-            avatarIcon: selectedAvatar.icon,
-            avatarLabel: selectedAvatar.label
-        });
+            avatar: isNewImageAvatar ? profile.avatar : selectedAvatar.icon,
+            avatarType: isNewImageAvatar ? 'image' : 'generated',
+            avatarIcon: isNewImageAvatar ? profile.avatarIcon : selectedAvatar.icon,
+            avatarLabel: isNewImageAvatar ? profile.avatarLabel : selectedAvatar.label
+        };
+
+        onSave(saveData);
         close();
     });
     buttonsDiv.appendChild(saveBtn);

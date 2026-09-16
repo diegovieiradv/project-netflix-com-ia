@@ -6,7 +6,7 @@ export function getYouTubeId(url) {
     if (url.includes('v=')) {
         id = url.split('v=')[1].split('&')[0];
     } else {
-        id = url.split('/').pop();
+        id = url.split('/').pop().split('?')[0].split('&')[0];
     }
     return ytRegex.test(id) ? id : defaultId;
 }
@@ -62,6 +62,61 @@ export function getDuration(item) {
     const hours = 1 + (hash % 3);
     const minutes = (hash * 7) % 60;
     return hours + 'h ' + String(minutes).padStart(2, '0') + 'm';
+}
+
+// ===== Utility Functions =====
+
+export function debounce(fn, delay) {
+    let timer = null;
+    const debounced = function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            fn.apply(context, args);
+        }, delay);
+    };
+    debounced.cancel = function () {
+        clearTimeout(timer);
+        timer = null;
+    };
+    return debounced;
+}
+
+export function throttle(fn, limit) {
+    let waiting = false;
+    let lastArgs = null;
+    let lastContext = null;
+    return function () {
+        if (!waiting) {
+            fn.apply(this, arguments);
+            waiting = true;
+            setTimeout(function () {
+                waiting = false;
+                if (lastArgs) {
+                    fn.apply(lastContext, lastArgs);
+                    lastArgs = null;
+                    lastContext = null;
+                }
+            }, limit);
+        } else {
+            lastArgs = arguments;
+            lastContext = this;
+        }
+    };
+}
+
+export function memoize(fn) {
+    const cache = new Map();
+    return function () {
+        const key = JSON.stringify(arguments);
+        if (cache.has(key)) {
+            return cache.get(key);
+        }
+        const result = fn.apply(this, arguments);
+        cache.set(key, result);
+        return result;
+    };
 }
 
 // Genre color mapping

@@ -5,6 +5,7 @@ import { createProfileModal } from './ProfileModal.js';
 export function renderProfileScreen(container) {
     const section = document.createElement('section');
     section.className = 'profile-selection';
+    section.setAttribute('aria-label', 'Seleção de perfil');
 
     // Header with logo
     const header = document.createElement('header');
@@ -27,14 +28,20 @@ export function renderProfileScreen(container) {
 
     const grid = document.createElement('ul');
     grid.className = 'profiles-grid';
+    grid.setAttribute('role', 'list');
+    grid.setAttribute('aria-label', 'Perfis disponíveis');
 
     const profiles = State.getProfiles();
 
     profiles.forEach(profile => {
         const li = document.createElement('li');
+        li.setAttribute('role', 'listitem');
 
         const card = document.createElement('article');
         card.className = 'profile-card';
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', 'Perfil: ' + profile.name);
 
         const avatar = document.createElement('div');
         avatar.className = 'profile-avatar';
@@ -67,7 +74,7 @@ export function renderProfileScreen(container) {
         // Edit button on hover
         const editBtn = document.createElement('button');
         editBtn.className = 'profile-edit-btn';
-        editBtn.setAttribute('aria-label', 'Editar perfil');
+        editBtn.setAttribute('aria-label', 'Editar perfil ' + profile.name);
         const editIcon = document.createElement('i');
         editIcon.className = 'fas fa-pencil-alt';
         editBtn.appendChild(editIcon);
@@ -102,14 +109,26 @@ export function renderProfileScreen(container) {
             navigateTo('#catalog');
         });
 
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                State.setCurrentProfile(profile.id);
+                navigateTo('#catalog');
+            }
+        });
+
         li.appendChild(card);
         grid.appendChild(li);
     });
 
     // Add profile card
     const addLi = document.createElement('li');
+    addLi.setAttribute('role', 'listitem');
     const addCard = document.createElement('article');
     addCard.className = 'profile-card add-profile-card';
+    addCard.setAttribute('tabindex', '0');
+    addCard.setAttribute('role', 'button');
+    addCard.setAttribute('aria-label', 'Adicionar novo perfil');
 
     const addAvatar = document.createElement('div');
     addAvatar.className = 'profile-avatar add-avatar';
@@ -117,6 +136,7 @@ export function renderProfileScreen(container) {
     const addIcon = document.createElement('div');
     addIcon.className = 'add-icon';
     addIcon.textContent = '+';
+    addIcon.setAttribute('aria-hidden', 'true');
     addAvatar.appendChild(addIcon);
     addCard.appendChild(addAvatar);
 
@@ -133,6 +153,19 @@ export function renderProfileScreen(container) {
             }
             renderProfileScreen(container);
         }, () => {});
+    });
+
+    addCard.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            createProfileModal(null, (data) => {
+                State.addProfile(data);
+                while (container.firstChild) {
+                    container.removeChild(container.firstChild);
+                }
+                renderProfileScreen(container);
+            }, () => {});
+        }
     });
 
     addLi.appendChild(addCard);
