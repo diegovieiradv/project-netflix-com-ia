@@ -991,33 +991,22 @@ a:hover {
 }
 
 .movie-row {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    overflow-y: visible;
-    padding: 10px 4% 50px 4%;
-    margin: 0 -4%;
-    scroll-behavior: smooth;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.movie-row::-webkit-scrollbar {
-    display: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 10px 0 30px 0;
 }
 
 /* ===== MOVIE CARD (from catalogo.css) ===== */
 .movie-card {
-    min-width: 250px;
-    width: 250px;
-    height: 140px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
     background-color: var(--bg-tertiary);
     border-radius: 4px;
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s, border-radius 0.3s 0s, z-index 0s 0.3s, box-shadow 0.3s 0s;
+    transition: border-radius 0.3s 0s, box-shadow 0.3s 0s;
     position: relative;
     z-index: 1;
-    transform-origin: center center;
 }
 
 .movie-card.origin-left {
@@ -1084,9 +1073,9 @@ a:hover {
 
 /* Card Title — below the poster */
 .card-wrapper .card-title {
-    margin: 6px 0 0 0;
+    margin: 8px 0 0 0;
     padding: 0 2px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--text-primary);
     text-align: left;
@@ -1631,15 +1620,14 @@ footer {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .movie-card {
-        min-width: 200px;
-        width: 200px;
-        height: 112px;
+    .movie-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
     }
 
     .card-wrapper .card-title {
-        font-size: 10px;
-        margin-top: 4px;
+        font-size: 12px;
+        margin-top: 6px;
     }
 
     .slider-title {
@@ -1860,15 +1848,14 @@ footer {
         font-size: 0.75rem;
     }
 
-    .movie-card {
-        min-width: 160px;
-        width: 160px;
-        height: 90px;
+    .movie-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
     .card-wrapper .card-title {
-        font-size: 9px;
-        margin-top: 3px;
+        font-size: 11px;
+        margin-top: 5px;
     }
 }
 
@@ -1935,15 +1922,14 @@ footer {
         font-size: 0.7rem;
     }
 
-    .movie-card {
-        min-width: 140px;
-        width: 140px;
-        height: 78px;
+    .movie-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
 
     .card-wrapper .card-title {
-        font-size: 8px;
-        margin-top: 3px;
+        font-size: 10px;
+        margin-top: 4px;
     }
 
     .avatar-picker {
