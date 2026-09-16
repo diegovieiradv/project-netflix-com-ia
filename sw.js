@@ -1,11 +1,11 @@
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const CACHE_NAME = `flixio-${CACHE_VERSION}`;
 
 // Versioned asset map — bump version per-file to force revalidation
 const STATIC_ASSETS = {
     '/': { url: '/index.html', version: '1' },
     '/index.html': { url: '/index.html', version: '1' },
-    '/styles.css': { url: '/styles.css', version: '3' },
+    '/styles.css': { url: '/styles.css', version: '4' },
     '/app.js': { url: '/app.js', version: '1' },
     '/js/state.js': { url: '/js/state.js', version: '1' },
     '/js/router.js': { url: '/js/router.js', version: '1' },
