@@ -7,34 +7,40 @@ export function renderProfileScreen(container) {
     section.className = 'profile-selection';
     section.setAttribute('aria-label', 'Seleção de perfil');
 
+    // Content wrapper
+    const content = document.createElement('div');
+    content.className = 'profile-selection-content';
+
     // Header with logo
     const header = document.createElement('header');
-    header.className = 'header-profiles';
+    header.className = 'profile-header';
 
     const logo = document.createElement('img');
     logo.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100'%3E%3Ctext x='50' y='70' font-size='60' fill='%23E50914' font-weight='bold' font-family='Arial'%3EFLIXIO%3C/text%3E%3C/svg%3E";
     logo.alt = 'FLIXIO';
-    logo.className = 'logo';
+    logo.className = 'profile-logo';
     header.appendChild(logo);
-    section.appendChild(header);
+    content.appendChild(header);
 
     // Main content
     const main = document.createElement('main');
-    main.className = 'profiles-container';
+    main.className = 'profiles-main';
 
     const h1 = document.createElement('h1');
+    h1.className = 'profiles-title';
     h1.textContent = 'Quem está assistindo?';
     main.appendChild(h1);
 
-    const grid = document.createElement('ul');
-    grid.className = 'profiles-grid';
-    grid.setAttribute('role', 'list');
-    grid.setAttribute('aria-label', 'Perfis disponíveis');
+    const list = document.createElement('ul');
+    list.className = 'profiles-list';
+    list.setAttribute('role', 'list');
+    list.setAttribute('aria-label', 'Perfis disponíveis');
 
     const profiles = State.getProfiles();
 
     profiles.forEach(profile => {
         const li = document.createElement('li');
+        li.className = 'profiles-list-item';
         li.setAttribute('role', 'listitem');
 
         const card = document.createElement('article');
@@ -53,7 +59,6 @@ export function renderProfileScreen(container) {
             img.loading = 'lazy';
             img.decoding = 'async';
             img.addEventListener('error', () => {
-                // Fallback to generated avatar - check if img is still a child
                 if (avatar.contains(img)) {
                     const fallbackDiv = document.createElement('div');
                     fallbackDiv.className = 'avatar-generated';
@@ -82,7 +87,6 @@ export function renderProfileScreen(container) {
             e.stopPropagation();
             createProfileModal(profile.id, (updates) => {
                 State.updateProfile(profile.id, updates);
-                // Re-render the entire profile screen
                 while (container.firstChild) {
                     container.removeChild(container.firstChild);
                 }
@@ -100,7 +104,7 @@ export function renderProfileScreen(container) {
         card.appendChild(avatar);
 
         const name = document.createElement('p');
-        name.className = 'profile-name-text';
+        name.className = 'profile-name';
         name.textContent = profile.name;
         card.appendChild(name);
 
@@ -118,12 +122,12 @@ export function renderProfileScreen(container) {
         });
 
         li.appendChild(card);
-        grid.appendChild(li);
+        list.appendChild(li);
     });
 
     // Add profile card
     const addLi = document.createElement('li');
-    addLi.setAttribute('role', 'listitem');
+    addLi.className = 'profiles-list-item';
     const addCard = document.createElement('article');
     addCard.className = 'profile-card add-profile-card';
     addCard.setAttribute('tabindex', '0');
@@ -141,7 +145,7 @@ export function renderProfileScreen(container) {
     addCard.appendChild(addAvatar);
 
     const addName = document.createElement('p');
-    addName.className = 'profile-name-text';
+    addName.className = 'profile-name';
     addName.textContent = 'Adicionar Perfil';
     addCard.appendChild(addName);
 
@@ -169,9 +173,10 @@ export function renderProfileScreen(container) {
     });
 
     addLi.appendChild(addCard);
-    grid.appendChild(addLi);
+    list.appendChild(addLi);
 
-    main.appendChild(grid);
-    section.appendChild(main);
+    main.appendChild(list);
+    content.appendChild(main);
+    section.appendChild(content);
     container.appendChild(section);
 }
