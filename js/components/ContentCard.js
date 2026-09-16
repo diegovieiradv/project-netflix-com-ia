@@ -176,6 +176,13 @@ export function createContentCard(item) {
     card.appendChild(img);
     card.appendChild(details);
 
+    // Card title element
+    const cardTitle = document.createElement('p');
+    cardTitle.className = 'card-title';
+    cardTitle.textContent = item.title || 'Sem título';
+    cardTitle.setAttribute('aria-label', 'Título: ' + (item.title || 'Sem título'));
+    card.appendChild(cardTitle);
+
     // Top 10 badge
     if (item.top10) {
         const badge = document.createElement('div');

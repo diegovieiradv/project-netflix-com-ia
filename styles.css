@@ -1029,7 +1029,7 @@ a:hover {
 }
 
 .movie-card:hover {
-    transform: scale(1.6) translateY(-5%);
+    transform: scale(1.3);
     z-index: 99;
     border-radius: 6px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
@@ -1074,6 +1074,27 @@ a:hover {
 
 .movie-card img.playing-video {
     opacity: 0;
+}
+
+/* Card Title */
+.movie-card .card-title {
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    width: 100%;
+    padding: 0 8px;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.6);
+    z-index: 3;
+    pointer-events: none;
+    line-height: 1.3;
 }
 
 /* Card Details Modal */
@@ -1617,6 +1638,12 @@ footer {
         height: 112px;
     }
 
+    .movie-card .card-title {
+        font-size: 9px;
+        bottom: 4px;
+        padding: 0 4px;
+    }
+
     .slider-title {
         font-size: 4vw;
         line-height: 4.5vw;
@@ -1840,6 +1867,12 @@ footer {
         width: 160px;
         height: 90px;
     }
+
+    .movie-card .card-title {
+        font-size: 8px;
+        bottom: 3px;
+        padding: 0 3px;
+    }
 }
 
 /* ===== TOUCH DEVICES ===== */
@@ -1909,6 +1942,12 @@ footer {
         min-width: 140px;
         width: 140px;
         height: 78px;
+    }
+
+    .movie-card .card-title {
+        font-size: 8px;
+        bottom: 3px;
+        padding: 0 3px;
     }
 
     .avatar-picker {
