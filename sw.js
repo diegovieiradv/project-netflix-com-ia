@@ -1,11 +1,11 @@
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `flixio-${CACHE_VERSION}`;
 
 // Versioned asset map — bump version per-file to force revalidation
 const STATIC_ASSETS = {
     '/': { url: '/index.html', version: '1' },
     '/index.html': { url: '/index.html', version: '1' },
-    '/styles.css': { url: '/styles.css', version: '1' },
+    '/styles.css': { url: '/styles.css', version: '2' },
     '/app.js': { url: '/app.js', version: '1' },
     '/js/state.js': { url: '/js/state.js', version: '1' },
     '/js/router.js': { url: '/js/router.js', version: '1' },
@@ -13,7 +13,7 @@ const STATIC_ASSETS = {
     '/js/utils.js': { url: '/js/utils.js', version: '1' },
     '/js/components/ProfileScreen.js': { url: '/js/components/ProfileScreen.js', version: '1' },
     '/js/components/CatalogScreen.js': { url: '/js/components/CatalogScreen.js', version: '1' },
-    '/js/components/ContentCard.js': { url: '/js/components/ContentCard.js', version: '1' },
+    '/js/components/ContentCard.js': { url: '/js/components/ContentCard.js', version: '2' },
     '/js/components/HeroBanner.js': { url: '/js/components/HeroBanner.js', version: '1' },
     '/js/components/Carousel.js': { url: '/js/components/Carousel.js', version: '1' },
     '/js/components/ProfileModal.js': { url: '/js/components/ProfileModal.js', version: '1' },

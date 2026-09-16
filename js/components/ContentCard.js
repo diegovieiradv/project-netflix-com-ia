@@ -2,6 +2,10 @@ import { getYouTubeId, getMatchScore, getDuration, getRandomAgeBadge, generatePo
 import { State, Toast } from '../state.js';
 
 export function createContentCard(item) {
+    // Wrapper to hold card + title below
+    const wrapper = document.createElement('div');
+    wrapper.className = 'card-wrapper';
+
     const card = document.createElement('div');
     card.className = 'movie-card';
     card.setAttribute('role', 'group');
@@ -19,11 +23,9 @@ export function createContentCard(item) {
     img.loading = 'lazy';
     img.decoding = 'async';
     img.addEventListener('error', () => {
-        // Avoid infinite loop if fallback also fails
         if (img.src !== originalSrc) {
             img.src = generatePoster(item.title, item.color);
         } else {
-            // Last resort: show a colored placeholder
             img.style.display = 'none';
             const placeholder = document.createElement('div');
             placeholder.className = 'avatar-generated';
@@ -82,7 +84,6 @@ export function createContentCard(item) {
     const addI = document.createElement('i');
     addI.className = 'fas fa-plus';
     addBtn.appendChild(addI);
-    // Check if already favorited
     const currentProfile = State.getCurrentProfile();
     if (currentProfile && State.isFavorite(currentProfile.id, item.title)) {
         addI.className = 'fas fa-check';
@@ -160,7 +161,7 @@ export function createContentCard(item) {
 
     details.appendChild(infoRow);
 
-    // Tags row - dynamic from genres
+    // Tags row
     const tagsRow = document.createElement('div');
     tagsRow.className = 'details-tags';
     const genres = item.genres || ['Filme'];
@@ -171,17 +172,10 @@ export function createContentCard(item) {
     });
     details.appendChild(tagsRow);
 
-    // Assemble card (details first so img/iframe are on top)
+    // Assemble card
     card.appendChild(iframe);
     card.appendChild(img);
     card.appendChild(details);
-
-    // Card title element
-    const cardTitle = document.createElement('p');
-    cardTitle.className = 'card-title';
-    cardTitle.textContent = item.title || 'Sem título';
-    cardTitle.setAttribute('aria-label', 'Título: ' + (item.title || 'Sem título'));
-    card.appendChild(cardTitle);
 
     // Top 10 badge
     if (item.top10) {
@@ -222,6 +216,15 @@ export function createContentCard(item) {
         pbContainer.appendChild(pbValue);
         card.appendChild(pbContainer);
     }
+
+    // Card title — OUTSIDE the card, in the wrapper
+    const cardTitle = document.createElement('p');
+    cardTitle.className = 'card-title';
+    cardTitle.textContent = item.title || 'Sem título';
+
+    // Assemble wrapper: card + title
+    wrapper.appendChild(card);
+    wrapper.appendChild(cardTitle);
 
     // Touch detection
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -269,9 +272,7 @@ export function createContentCard(item) {
     // Touch handlers (mobile)
     if (isTouchDevice) {
         card.addEventListener('touchstart', (e) => {
-            // Only start if not tapping a button inside the card
             if (e.target.closest('.btn-icon')) return;
-
             playTimeout = setTimeout(startTrailerPreview, 600);
         }, { passive: true });
 
@@ -296,5 +297,5 @@ export function createContentCard(item) {
         }
     });
 
-    return card;
+    return wrapper;
 }
