@@ -1886,6 +1886,55 @@ footer {
     }
 }
 
+/* ===== TOUCH DEVICES ===== */
+@media (hover: none) and (pointer: coarse) {
+    /* Prevent hover scaling on touch — use active state instead */
+    .movie-card:hover {
+        transform: none;
+        z-index: 1;
+        border-radius: 4px;
+        box-shadow: none;
+        transition: transform 0.1s ease, border-radius 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    /* Show card details on tap (active state) */
+    .movie-card:active {
+        transform: scale(1.02);
+        z-index: 99;
+        border-radius: 6px;
+    }
+
+    .movie-card:active .card-details {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.2s ease, visibility 0s ease;
+    }
+
+    .movie-card:active img {
+        border-radius: 6px 6px 0 0;
+    }
+
+    .movie-card:active iframe.playing {
+        border-radius: 6px 6px 0 0;
+    }
+
+    /* Remove delayed hover transitions on touch */
+    .movie-card {
+        transition: transform 0.1s ease, border-radius 0.1s ease;
+    }
+
+    .card-details {
+        transition: opacity 0.15s ease, visibility 0s ease;
+    }
+
+    /* Larger touch targets for buttons */
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
 /* Ultra pequeno (menos de 380px) */
 @media (max-width: 380px) {
     html {

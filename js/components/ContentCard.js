@@ -216,9 +216,11 @@ export function createContentCard(item) {
         card.appendChild(pbContainer);
     }
 
-    // Hover handlers
-    let playTimeout;
-    card.addEventListener('mouseenter', () => {
+    // Touch detection
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    // Helper: start trailer playback after delay
+    function startTrailerPreview() {
         const rect = card.getBoundingClientRect();
         const windowWidth = window.innerWidth;
 
@@ -228,23 +230,54 @@ export function createContentCard(item) {
             card.classList.add('origin-right');
         }
 
-        playTimeout = setTimeout(() => {
-            if (videoId) {
-                iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&mute=1&controls=0&modestbranding=1&loop=1&playlist=' + videoId;
-                iframe.classList.add('playing');
-                img.classList.add('playing-video');
-            }
-        }, 600);
-    });
+        if (videoId) {
+            iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&mute=1&controls=0&modestbranding=1&loop=1&playlist=' + videoId;
+            iframe.classList.add('playing');
+            img.classList.add('playing-video');
+        }
+    }
 
-    card.addEventListener('mouseleave', () => {
-        clearTimeout(playTimeout);
+    // Helper: stop trailer playback
+    function stopTrailerPreview() {
         iframe.classList.remove('playing');
         img.classList.remove('playing-video');
         iframe.src = '';
         card.classList.remove('origin-left');
         card.classList.remove('origin-right');
-    });
+    }
+
+    // Hover handlers (desktop only)
+    let playTimeout;
+    if (!isTouchDevice) {
+        card.addEventListener('mouseenter', () => {
+            playTimeout = setTimeout(startTrailerPreview, 600);
+        });
+
+        card.addEventListener('mouseleave', () => {
+            clearTimeout(playTimeout);
+            stopTrailerPreview();
+        });
+    }
+
+    // Touch handlers (mobile)
+    if (isTouchDevice) {
+        card.addEventListener('touchstart', (e) => {
+            // Only start if not tapping a button inside the card
+            if (e.target.closest('.btn-icon')) return;
+
+            playTimeout = setTimeout(startTrailerPreview, 600);
+        }, { passive: true });
+
+        card.addEventListener('touchend', () => {
+            clearTimeout(playTimeout);
+            stopTrailerPreview();
+        });
+
+        card.addEventListener('touchcancel', () => {
+            clearTimeout(playTimeout);
+            stopTrailerPreview();
+        });
+    }
 
     // Keyboard accessibility
     card.addEventListener('keydown', (e) => {

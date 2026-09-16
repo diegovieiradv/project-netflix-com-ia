@@ -6,8 +6,8 @@ export const categories = [
             { img: 'https://image.tmdb.org/t/p/w500/wN2xWp1eIwCKOD0BHTcErTBv1Uq.jpg', progress: 20, youtube: 'https://www.youtube.com/watch?v=cXg62-t8BWs', title: 'Gladiador', year: 2000, rating: '★ 8.5', color: '#8B4513', category: 'Épicos', genres: ['Ação', 'Épico'] },
             { img: 'https://image.tmdb.org/t/p/w500/a07wLy4ONfpsjnBqMwhlWTJTcm.jpg', progress: 70, youtube: 'https://www.youtube.com/watch?v=zckJCxYxn1g', title: 'Troya', year: 2004, rating: '★ 7.2', color: '#B8860B', category: 'Épicos', genres: ['Épico', 'Guerra'] },
             { img: 'https://ingresso-a.akamaihd.net/img/cinema/cartaz/14413-destaque.jpg', progress: 10, youtube: 'https://www.youtube.com/watch?v=a06zxOyQrAs', title: 'Braveheart', year: 1995, rating: '★ 8.4', color: '#004E89', category: 'Épicos', genres: ['Épico', 'Guerra', 'Drama'] },
-            { img: 'https://image.tmdb.org/t/p/w500/anFx9aTOOYqgS3v7x3R84Kz67ly.jpg', progress: 55, youtube: 'https://www.youtube.com/watch?v=HhesaQXLuWo', title: 'Breaking Bad', year: 2008, rating: '★ 9.5', color: '#FFB81C', category: 'Séries', genres: ['Drama', 'Crime', 'Suspense'] },
-            { img: 'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg', progress: 30, youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'Stranger Things', year: 2016, rating: '★ 8.7', color: '#C41E3A', category: 'Séries', genres: ['Ficção Científica', 'Suspense', 'Terror'] },
+            { img: 'https://image.tmdb.org/t/p/w500/anFx9aTOOYqgS3v7x3R84Kz67ly.jpg', progress: 55, youtube: 'https://www.youtube.com/watch?v=VaOt6tXyf2Y', title: 'Breaking Bad', year: 2008, rating: '★ 9.5', color: '#FFB81C', category: 'Séries', genres: ['Drama', 'Crime', 'Suspense'] },
+            { img: 'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg', progress: 30, youtube: 'https://www.youtube.com/watch?v=b9EkMc79ZSU', title: 'Stranger Things', year: 2016, rating: '★ 8.7', color: '#C41E3A', category: 'Séries', genres: ['Ficção Científica', 'Suspense', 'Terror'] },
         ]
     },
     {
@@ -24,9 +24,9 @@ export const categories = [
     {
         title: 'Séries',
         items: [
-            { img: 'https://image.tmdb.org/t/p/w500/1M876KPjulVwppEpldhdc8V4o68.jpg', top10: true, badge: 'Nova temporada', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'The Crown', year: 2016, rating: '★ 8.6', color: '#B8860B', category: 'Séries', genres: ['Drama', 'Biografia'] },
-            { img: 'https://image.tmdb.org/t/p/w500/anFx9aTOOYqgS3v7x3R84Kz67ly.jpg', top10: true, youtube: 'https://www.youtube.com/watch?v=HhesaQXLuWo', title: 'Breaking Bad', year: 2008, rating: '★ 9.5', color: '#FFB81C', category: 'Séries', genres: ['Drama', 'Crime', 'Suspense'] },
-            { img: 'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg', badge: 'Novo episódio', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'Stranger Things', year: 2016, rating: '★ 8.7', color: '#C41E3A', category: 'Séries', genres: ['Ficção Científica', 'Suspense', 'Terror'] },
+            { img: 'https://image.tmdb.org/t/p/w500/1M876KPjulVwppEpldhdc8V4o68.jpg', top10: true, badge: 'Nova temporada', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=JWtnJjn6ng0', title: 'The Crown', year: 2016, rating: '★ 8.6', color: '#B8860B', category: 'Séries', genres: ['Drama', 'Biografia'] },
+            { img: 'https://image.tmdb.org/t/p/w500/anFx9aTOOYqgS3v7x3R84Kz67ly.jpg', top10: true, youtube: 'https://www.youtube.com/watch?v=VaOt6tXyf2Y', title: 'Breaking Bad', year: 2008, rating: '★ 9.5', color: '#FFB81C', category: 'Séries', genres: ['Drama', 'Crime', 'Suspense'] },
+            { img: 'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg', badge: 'Novo episódio', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=b9EkMc79ZSU', title: 'Stranger Things', year: 2016, rating: '★ 8.7', color: '#C41E3A', category: 'Séries', genres: ['Ficção Científica', 'Suspense', 'Terror'] },
             { img: 'https://image.tmdb.org/t/p/w500/dg9e5fPRRId8PoBE0F6jl5y85Eu.jpg', badge: 'Novidade', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'The Office', year: 2005, rating: '★ 9.0', color: '#228B22', category: 'Séries', genres: ['Comédia'] },
             { img: 'https://image.tmdb.org/t/p/w500/dDlEmu3EZ0Pgg93K2SVNLCjCSvE.jpg', youtube: 'https://www.youtube.com/watch?v=oqxAJKy0ii4', title: 'Squid Game', year: 2021, rating: '★ 8.0', color: '#E74C3C', category: 'Séries', genres: ['Drama', 'Suspense', 'Thriller'] },
         ]
@@ -34,10 +34,10 @@ export const categories = [
     {
         title: 'Para maratonar',
         items: [
-            { img: 'https://image.tmdb.org/t/p/w500/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg', top10: true, youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'Game of Thrones', year: 2011, rating: '★ 9.3', color: '#000', category: 'Para maratonar', genres: ['Fantasia', 'Drama', 'Aventura'] },
-            { img: 'https://image.tmdb.org/t/p/w500/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg', top10: true, badge: 'Novidade', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'The Mandalorian', year: 2019, rating: '★ 8.7', color: '#000033', category: 'Para maratonar', genres: ['Ficção Científica', 'Aventura'] },
-            { img: 'https://image.tmdb.org/t/p/w500/7vjaCdMw15FEbXyLQTVa04URsPm.jpg', top10: true, badge: 'Novo episódio', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'The Witcher', year: 2019, rating: '★ 8.2', color: '#654321', category: 'Para maratonar', genres: ['Fantasia', 'Ação', 'Aventura'] },
-            { img: 'https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg', top10: true, badge: 'Novo episódio', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'The Last of Us', year: 2023, rating: '★ 8.8', color: '#8B0000', category: 'Para maratonar', genres: ['Drama', 'Aventura', 'Ficção Científica'] },
+            { img: 'https://image.tmdb.org/t/p/w500/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg', top10: true, youtube: 'https://www.youtube.com/watch?v=J7JYw5kQg_Y', title: 'Game of Thrones', year: 2011, rating: '★ 9.3', color: '#000', category: 'Para maratonar', genres: ['Fantasia', 'Drama', 'Aventura'] },
+            { img: 'https://image.tmdb.org/t/p/w500/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg', top10: true, badge: 'Novidade', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=aOC8E8z_ifw', title: 'The Mandalorian', year: 2019, rating: '★ 8.7', color: '#000033', category: 'Para maratonar', genres: ['Ficção Científica', 'Aventura'] },
+            { img: 'https://image.tmdb.org/t/p/w500/7vjaCdMw15FEbXyLQTVa04URsPm.jpg', top10: true, badge: 'Novo episódio', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=ndl1W4ltcmg', title: 'The Witcher', year: 2019, rating: '★ 8.2', color: '#654321', category: 'Para maratonar', genres: ['Fantasia', 'Ação', 'Aventura'] },
+            { img: 'https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg', top10: true, badge: 'Novo episódio', badgeColor: 'red', youtube: 'https://www.youtube.com/watch?v=uLtkt8BonwM', title: 'The Last of Us', year: 2023, rating: '★ 8.8', color: '#8B0000', category: 'Para maratonar', genres: ['Drama', 'Aventura', 'Ficção Científica'] },
         ]
     },
     {
@@ -57,7 +57,7 @@ export const categories = [
             { img: 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg', youtube: 'https://www.youtube.com/watch?v=5xH0HfJHsaY', title: 'Parasite', year: 2019, rating: '★ 8.5', color: '#333', category: 'Drama', genres: ['Drama', 'Thriller', 'Comédia'] },
             { img: 'https://image.tmdb.org/t/p/w500/z2FnLKpFi1HPO7BEJxdkv6hpJSU.jpg', youtube: 'https://www.youtube.com/watch?v=PaZVjZEFkRs', title: 'Good Will Hunting', year: 1997, rating: '★ 8.3', color: '#2E8B57', category: 'Drama', genres: ['Drama', 'Romance'] },
             { img: 'https://image.tmdb.org/t/p/w500/gbSaK9v1CbcYH1ISgbM7XObD2dW.jpg', youtube: 'https://www.youtube.com/watch?v=TMTNkyw9wzY', title: 'The White Lotus', year: 2021, rating: '★ 8.0', color: '#006666', category: 'Drama', genres: ['Drama', 'Comédia'] },
-            { img: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', youtube: 'https://www.youtube.com/watch?v=wLo9bfgla4k', title: 'Oppenheimer', year: 2023, rating: '★ 8.5', color: '#FFD700', category: 'Drama', genres: ['Drama', 'Biografia'] },
+            { img: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', youtube: 'https://www.youtube.com/watch?v=bK6ldnjE3Y0', title: 'Oppenheimer', year: 2023, rating: '★ 8.5', color: '#FFD700', category: 'Drama', genres: ['Drama', 'Biografia'] },
         ]
     },
     {
@@ -73,10 +73,10 @@ export const categories = [
         title: 'Populares',
         items: [
             { img: 'https://image.tmdb.org/t/p/w500/gKY6q7SjCkAU6FqvqWybDYgUKIF.jpg', youtube: 'https://www.youtube.com/watch?v=5PSNL1qE6VY', title: 'Avatar', year: 2009, rating: '★ 7.8', color: '#1B998B', category: 'Populares', genres: ['Ficção Científica', 'Aventura'] },
-            { img: 'https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg', youtube: 'https://www.youtube.com/watch?v=8QnMmp8InN4', title: 'Homem-Aranha', year: 2021, rating: '★ 8.2', color: '#4169E1', category: 'Populares', genres: ['Ação', 'Aventura', 'Ficção Científica'] },
+            { img: 'https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg', youtube: 'https://www.youtube.com/watch?v=ZYzbalQ6Lg8', title: 'Homem-Aranha', year: 2021, rating: '★ 8.2', color: '#4169E1', category: 'Populares', genres: ['Ação', 'Aventura', 'Ficção Científica'] },
             { img: 'https://image.tmdb.org/t/p/w500/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg', youtube: 'https://www.youtube.com/watch?v=zSWdZVtXT7E', title: 'Interestelar', year: 2014, rating: '★ 8.6', color: '#004E89', category: 'Populares', genres: ['Ficção Científica', 'Drama', 'Aventura'] },
             { img: 'https://image.tmdb.org/t/p/w500/v1tRXZ4JtD2Iv6fjkPvT4GiwslV.jpg', youtube: 'https://www.youtube.com/watch?v=8g18jFHCLXk', title: 'Duna', year: 2021, rating: '★ 8.0', color: '#FF6B35', category: 'Populares', genres: ['Ficção Científica', 'Aventura'] },
-            { img: 'https://image.tmdb.org/t/p/w500/ulcAi4dKpAjHwYGS08vNyx9H6I9.jpg', youtube: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'Mad Max', year: 2015, rating: '★ 8.1', color: '#8B0000', category: 'Populares', genres: ['Ação', 'Aventura'] },
+            { img: 'https://image.tmdb.org/t/p/w500/ulcAi4dKpAjHwYGS08vNyx9H6I9.jpg', youtube: 'https://www.youtube.com/watch?v=hEJnMQG9ev8', title: 'Mad Max', year: 2015, rating: '★ 8.1', color: '#8B0000', category: 'Populares', genres: ['Ação', 'Aventura'] },
         ]
     }
 ];
